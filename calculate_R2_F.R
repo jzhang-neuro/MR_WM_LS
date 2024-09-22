@@ -1,13 +1,14 @@
-# 定义计算R^2和F值的函数
-calculate_R2_F <- function(data) {
-  # 计算R^2
+# Define a function to calculate R^2 and F statistics, with N as an input parameter
+calculate_R2_F <- function(data, N) {
+  
+  # Calculate R^2 based on exposure beta, effect allele frequency (eaf), and sample size
   data <- transform(data, R2 = (2 * (beta.exposure^2) * eaf.exposure * (1 - eaf.exposure)) / 
                       (2 * (beta.exposure^2) * eaf.exposure * (1 - eaf.exposure) + 
-                         2 * (se.exposure^2) * samplesize.exposure * eaf.exposure * (1 - eaf.exposure)))
+                         2 * (se.exposure^2) * N * eaf.exposure * (1 - eaf.exposure)))
   
-  # 计算F值
-  N <- data$samplesize.exposure[1]
+  # Calculate the F-statistic based on R^2 and sample size
   data <- transform(data, F = (R2 * (N - 2)) / (1 - R2))
   
+  # Return the data with added R^2 and F columns
   return(data)
 }
